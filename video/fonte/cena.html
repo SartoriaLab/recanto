@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Great+Vibes&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; }
+  body { font-family: 'Outfit', sans-serif; color: #fff; background: radial-gradient(ellipse at 50% 40%, #1F6B25 0%, #0D3B13 70%, #07240B 100%); }
+  .scene { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; }
+  .scene.on { display: flex; }
+  .fade { opacity: 0; transform: translateY(30px); animation: up 1s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes up { to { opacity: 1; transform: none; } }
+  @keyframes pop { from { opacity: 0; transform: scale(.7) rotate(-12deg); } to { opacity: 1; transform: none; } }
+  .d1 { animation-delay: .3s } .d2 { animation-delay: .7s } .d3 { animation-delay: 1.1s } .d4 { animation-delay: 1.5s } .d5 { animation-delay: 1.9s }
+
+  /* intro / outro */
+  .center { text-align: center; }
+  .logo { width: 300px; margin: 0 auto 36px; opacity: 0; animation: pop 1.2s cubic-bezier(.16,1,.3,1) .1s forwards; filter: drop-shadow(0 10px 40px rgba(0,0,0,.4)); }
+  h1 { font-family: 'Cormorant Garamond', serif; font-size: 104px; line-height: 1; }
+  h1 em { font-family: 'Great Vibes', cursive; font-style: normal; color: #FFD54F; font-weight: 400; }
+  .kicker { font-size: 22px; letter-spacing: .35em; text-transform: uppercase; color: rgba(255,255,255,.6); margin-top: 28px; }
+  .line { width: 0; height: 2px; background: #FFD54F; margin: 34px auto 0; animation: grow 1s ease 1.4s forwards; }
+  @keyframes grow { to { width: 180px; } }
+
+  /* mobile */
+  .mob { display: flex; align-items: center; gap: 140px; }
+  .phone { width: 430px; height: 884px; border-radius: 56px; background: #111; padding: 20px; box-shadow: 0 40px 100px rgba(0,0,0,.5), inset 0 0 0 2px #333; position: relative; }
+  .phone::before { content: ''; position: absolute; top: 30px; left: 50%; width: 110px; height: 30px; margin-left: -55px; background: #111; border-radius: 20px; z-index: 2; }
+  .phone iframe { width: 390px; height: 844px; border: 0; border-radius: 38px; background: #fff; display: block; }
+  .side { max-width: 640px; }
+  .tag { display: inline-block; font-size: 18px; font-weight: 600; letter-spacing: .25em; text-transform: uppercase; color: #FFD54F; margin-bottom: 20px; }
+  .side h2 { font-family: 'Cormorant Garamond', serif; font-size: 76px; line-height: 1.05; margin-bottom: 36px; }
+  .side li { list-style: none; font-size: 28px; font-weight: 300; color: rgba(255,255,255,.85); padding: 14px 0 14px 44px; position: relative; border-bottom: 1px solid rgba(255,255,255,.1); }
+  .side li::before { content: ''; position: absolute; left: 0; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: #EF5350; }
+
+  /* resumo */
+  .grid { display: grid; grid-template-columns: repeat(3, 420px); gap: 28px; margin-top: 56px; }
+  .card { padding: 34px 32px; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); text-align: left; }
+  .card b { display: block; font-family: 'Cormorant Garamond', serif; font-size: 36px; margin-bottom: 8px; color: #FFD54F; }
+  .card span { font-size: 22px; font-weight: 300; color: rgba(255,255,255,.75); line-height: 1.45; }
+  .contact { font-size: 34px; font-weight: 300; margin-top: 30px; color: rgba(255,255,255,.85); }
+  .dev { font-size: 20px; color: rgba(255,255,255,.45); margin-top: 60px; letter-spacing: .1em; }
+</style>
+</head>
+<body>
+  <section class="scene" id="intro">
+    <div class="center">
+      <img class="logo" src="http://localhost:8765/imagens/logo-recanto.webp" alt="">
+      <h1 class="fade d2">Recanto <em>Pizzaria</em> &amp; Choperia</h1>
+      <div class="kicker fade d3">Apresentação do novo site</div>
+      <div class="line"></div>
+    </div>
+  </section>
+
+  <section class="scene" id="mobile">
+    <div class="mob">
+      <div class="phone fade"><iframe id="frame" src="about:blank"></iframe></div>
+      <div class="side">
+        <span class="tag fade d1">Celular</span>
+        <h2 class="fade d2">Perfeito na palma da mão</h2>
+        <ul>
+          <li class="fade d3">Pedido pelo WhatsApp em um toque</li>
+          <li class="fade d4">Menu adaptado e fácil de usar</li>
+          <li class="fade d5">Galeria com deslize entre fotos</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="resumo">
+    <div class="center">
+      <h1 class="fade" style="font-size:84px">O que há de <em>novo</em></h1>
+      <div class="grid">
+        <div class="card fade d1"><b>Visual</b><span>Hero com foto dos pratos e galeria completa no lugar dos espaços vazios</span></div>
+        <div class="card fade d2"><b>Aberto agora</b><span>Status em tempo real e o dia de hoje destacado no horário</span></div>
+        <div class="card fade d3"><b>Mais pedidos</b><span>Botão de cardápio completo no WhatsApp e mapa corrigido</span></div>
+        <div class="card fade d3"><b>Navegação</b><span>Logo no topo, menu com seção ativa e botão voltar ao topo</span></div>
+        <div class="card fade d4"><b>Velocidade</b><span>Imagens em WebP até 20 vezes mais leves: carrega rápido no 4G</span></div>
+        <div class="card fade d5"><b>Acessível</b><span>Teclado, leitores de tela e menos movimento quando o sistema pede</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="outro">
+    <div class="center">
+      <img class="logo" src="http://localhost:8765/imagens/logo-recanto.webp" alt="" style="width:240px">
+      <h1 class="fade d1" style="font-size:88px">Sua mesa está <em>esperando</em></h1>
+      <div class="contact fade d2">Av. Paulo Roberto Scandar, 1016 · Taquaritinga, SP</div>
+      <div class="contact fade d3">(16) 3252-2813 · Ter a Dom, 18h às 23h</div>
+      <div class="dev fade d4">Desenvolvido por Juliano Anselmo</div>
+    </div>
+  </section>
+<script>
+  function show(id) {
+    document.querySelectorAll('.scene').forEach(function (s) { s.classList.remove('on'); });
+    var el = document.getElementById(id);
+    // reinicia as animações da cena
+    el.querySelectorAll('.fade, .logo, .line').forEach(function (n) { n.style.animation = 'none'; n.offsetHeight; n.style.animation = ''; });
+    el.classList.add('on');
+  }
+</script>
+</body>
+</html>

@@ -100,8 +100,20 @@
     }
     .header-wrap {
       width: 100%; max-width: 1200px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
     }
+    .header-logo { opacity: 0; transform: translateY(-6px); pointer-events: none; transition: all 0.4s var(--ease); }
+    .header-logo img { height: 44px; width: auto; }
+    .header.scrolled .header-logo { opacity: 1; transform: none; pointer-events: auto; }
+    .header-inner a.active { color: #FFD54F; }
+    .header.scrolled .header-inner a.active { color: var(--green); }
+    .header-inner a:not(.header-cta) { position: relative; }
+    .header-inner a:not(.header-cta)::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 1.5px;
+      background: currentColor; transform: scaleX(0); transition: transform 0.3s var(--ease);
+    }
+    .header-inner a:hover::after, .header-inner a.active::after { transform: scaleX(1); }
+    a:focus-visible, button:focus-visible { outline: 2px solid #FFD54F; outline-offset: 3px; border-radius: 4px; }
     .header.scrolled {
       background: rgba(255,255,255,0.97); backdrop-filter: blur(16px);
       box-shadow: 0 1px 0 var(--border); height: 60px;
@@ -135,7 +147,8 @@
 
     .mobile-toggle { display: none; flex-direction: column; gap: 5px; background: none; padding: 8px; }
     .mobile-toggle span { display: block; width: 22px; height: 1.5px; background: #fff; transition: all 0.3s; }
-    .header.scrolled .mobile-toggle span { background: var(--dark); }
+    .header.scrolled .mobile-toggle span, .mobile-toggle.active span { background: var(--dark); }
+    body.menu-open .header-logo { opacity: 1; pointer-events: auto; transform: none; }
     .mobile-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
     .mobile-toggle.active span:nth-child(2) { opacity: 0; }
     .mobile-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
@@ -144,12 +157,40 @@
     .hero {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
       text-align: center; position: relative; overflow: hidden;
-      background: linear-gradient(160deg, #14491A 0%, #1B5E20 35%, #145218 65%, #0D3B13 100%);
+      background: var(--green-deep);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: -4%; pointer-events: none;
+      background: url('imagens/hero-food.webp') center/cover no-repeat;
+      animation: heroZoom 24s ease-in-out infinite alternate;
     }
     .hero::after {
       content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(circle at 50% 120%, rgba(198,40,40,0.08) 0%, transparent 50%);
+      background:
+        radial-gradient(ellipse at 50% 45%, rgba(13,59,19,0.55) 0%, rgba(13,59,19,0.88) 60%, rgba(8,36,12,0.96) 100%),
+        linear-gradient(180deg, rgba(13,59,19,0.5) 0%, transparent 30%, transparent 70%, rgba(13,59,19,0.9) 100%);
     }
+    @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
+    .hero-status {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px;
+      padding: 7px 16px; border-radius: 999px; font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase; color: #fff;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(6px);
+      opacity: 0; animation: fadeUp 1s var(--ease) 0.2s forwards;
+    }
+    .hero-status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    .hero-status.open .hero-status-dot { background: #4CAF50; box-shadow: 0 0 0 0 rgba(76,175,80,0.6); animation: dotPulse 2s infinite; }
+    .hero-status.closed .hero-status-dot { background: var(--red-light); }
+    @keyframes dotPulse { 70% { box-shadow: 0 0 0 8px rgba(76,175,80,0); } 100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); } }
+    .hero-scroll {
+      position: absolute; bottom: 28px; left: 50%; z-index: 2; width: 24px; height: 38px; margin-left: -12px;
+      border: 1.5px solid rgba(255,255,255,0.4); border-radius: 12px;
+    }
+    .hero-scroll::after {
+      content: ''; position: absolute; top: 7px; left: 50%; width: 3px; height: 7px; margin-left: -1.5px;
+      background: #fff; border-radius: 2px; animation: scrollHint 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollHint { 0% { opacity: 0; transform: translateY(0); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(12px); } }
     .hero-content { position: relative; z-index: 2; max-width: 680px; padding: 0 24px; }
     .hero-logo { margin-bottom: 28px; opacity: 0; animation: fadeUp 1s var(--ease) 0.3s forwards; }
     .hero-logo img { height: 220px; margin: 0 auto; filter: drop-shadow(0 6px 30px rgba(0,0,0,0.3)); }
@@ -229,6 +270,17 @@
     .menu-card h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
     .menu-card p { font-size: 0.85rem; color: var(--muted); font-weight: 300; line-height: 1.6; margin-bottom: 10px; }
     .menu-card-badge { font-size: 0.65rem; font-weight: 600; color: var(--green); letter-spacing: 0.1em; text-transform: uppercase; }
+    .menu-card::before {
+      content: ''; position: absolute; top: 0; left: 28px; right: 28px; height: 3px; border-radius: 0 0 3px 3px;
+      background: linear-gradient(90deg, var(--green), var(--red)); transform: scaleX(0); transition: transform 0.4s var(--ease);
+    }
+    .menu-card:hover::before { transform: scaleX(1); }
+    .menu-cta {
+      margin-top: 48px; padding: 32px 36px; border-radius: 12px; background: var(--bg);
+      border: 1px dashed var(--green-light); display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .menu-cta h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; color: var(--dark); line-height: 1.2; }
+    .menu-cta p { font-size: 0.88rem; color: var(--body); font-weight: 300; margin-top: 4px; }
 
     /* ===== FEATURES ===== */
     .features { padding: 100px 0; background: var(--bg); }
@@ -285,6 +337,21 @@
     .gallery-item:first-child { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
     .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
     .gallery-item:hover img { transform: scale(1.05); }
+    .gallery-item figcaption {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 16px 14px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.65)); color: #fff;
+      font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+      opacity: 0; transform: translateY(8px); transition: all 0.4s var(--ease);
+    }
+    .gallery-item:hover figcaption, .gallery-item:focus-visible figcaption { opacity: 1; transform: none; }
+    .lightbox-nav {
+      position: absolute; top: 50%; width: 48px; height: 48px; margin-top: -24px; border-radius: 50%;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff;
+      display: flex; align-items: center; justify-content: center; transition: background 0.2s;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.18); }
+    .lightbox-prev { left: 24px; } .lightbox-next { right: 24px; }
+    .lightbox-caption { position: absolute; bottom: 28px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.75); font-family: var(--font-display); font-size: 1.1rem; }
     .gallery-ph {
       width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;
       justify-content: center; gap: 8px; color: var(--muted); opacity: 0.5;
@@ -343,6 +410,10 @@
     .hours-day-time { font-size: 0.72rem; color: var(--green); font-weight: 500; }
     .hours-day.closed .hours-day-name { color: var(--muted); }
     .hours-day.closed .hours-day-time { color: var(--muted); font-weight: 400; }
+    .hours-day.today { background: var(--green); }
+    .hours-day.today .hours-day-name, .hours-day.today .hours-day-time { color: #fff; }
+    .hours-day.today.closed { background: var(--red-pale); }
+    .hours-day.today.closed .hours-day-name, .hours-day.today.closed .hours-day-time { color: var(--red); }
 
     /* ===== CTA BANNER ===== */
     .cta-banner {
@@ -378,11 +449,27 @@
     .wpp-float svg { width: 28px; height: 28px; fill: #fff; }
     @keyframes pulse { 0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.35); } 50% { box-shadow: 0 4px 36px rgba(37,211,102,0.55); } }
 
+    /* ===== BACK TO TOP ===== */
+    .to-top {
+      position: fixed; bottom: 92px; right: 30px; z-index: 998; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--bg); color: var(--green); border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s var(--ease);
+    }
+    .to-top.show { opacity: 1; visibility: visible; transform: none; }
+    .to-top:hover { background: var(--green); color: #fff; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; }
+    }
+
     /* ===== RESPONSIVE - TABLET ===== */
     @media (max-width: 1024px) {
       .header-inner { display: none; }
       .mobile-toggle { display: flex; }
-      .header-wrap { justify-content: flex-end; }
+      .header-wrap { justify-content: space-between; }
       .header { padding: 0 20px; }
 
       .about-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -436,6 +523,12 @@
       .menu-card { padding: 28px 20px; }
       .menu-card-emoji { font-size: 2rem; }
       .menu-card h3 { font-size: 1.15rem; }
+      .menu-cta { flex-direction: column; text-align: center; padding: 24px 20px; margin-top: 32px; }
+      .menu-cta .btn { width: 100%; justify-content: center; }
+      .hero-scroll { display: none; }
+      .header-logo img { height: 38px; }
+      .to-top { bottom: 80px; right: 22px; width: 40px; height: 40px; }
+      .lightbox-prev { left: 8px; } .lightbox-next { right: 8px; }
 
       /* Features */
       .features-head { margin-bottom: 36px; }
@@ -496,20 +589,21 @@
 <body>
 
   <div class="preloader" id="preloader">
-    <div class="preloader-logo"><img src="imagens/logo-recanto.png" alt="Recanto Pizzaria e Choperia"></div>
+    <div class="preloader-logo"><img src="imagens/logo-recanto.webp" alt="Recanto Pizzaria e Choperia" width="135" height="135"></div>
     <div class="preloader-bar"></div>
   </div>
 
   <header class="header" id="header">
     <div class="header-wrap">
-      <div class="header-inner" id="nav">
+      <a href="#hero" class="header-logo" aria-label="Voltar ao início"><img src="imagens/logo-recanto.webp" alt="Recanto" width="44" height="44"></a>
+      <nav class="header-inner" id="nav" aria-label="Navegação principal">
         <a href="#sobre" data-section="sobre">Sobre</a>
         <a href="#cardapio" data-section="cardapio">Card&aacute;pio</a>
         <a href="#galeria" data-section="galeria">Galeria</a>
         <a href="#contato" data-section="contato">Contato</a>
         <a href="https://wa.me/551632522813?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20um%20pedido%20no%20Recanto%20Pizzaria." class="header-cta" target="_blank" rel="noopener">WhatsApp</a>
-      </div>
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      </nav>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMobile"><span></span><span></span><span></span></button>
     </div>
   </header>
 
@@ -523,7 +617,8 @@
 
   <section class="hero" id="hero">
     <div class="hero-content">
-      <div class="hero-logo"><img src="imagens/logo-recanto.png" alt="Recanto Pizzaria e Choperia"></div>
+      <div class="hero-status" id="heroStatus"><span class="hero-status-dot"></span><span id="heroStatusText">Ter a Dom · 18h às 23h</span></div>
+      <div class="hero-logo"><img src="imagens/logo-recanto.webp" alt="Recanto Pizzaria e Choperia" width="220" height="220" fetchpriority="high"></div>
       <h1 class="hero-title">Pizzaria & <em>Choperia</em></h1>
       <p class="hero-sub">Pizzas artesanais bem recheadas, chopp gelado e o melhor atendimento de Taquaritinga. De terça a domingo, a partir das 18h.</p>
       <div class="hero-btns">
@@ -548,6 +643,7 @@
         </div>
       </div>
     </div>
+    <a href="#sobre" class="hero-scroll" aria-label="Rolar para o conteúdo"></a>
   </section>
 
   <section class="about" id="sobre">
@@ -563,7 +659,7 @@
           </div>
         </div>
         <div class="about-img reveal reveal-d2">
-          <img src="imagens/fachada.jpg" alt="Fachada do Recanto Pizzaria em Taquaritinga" loading="lazy">
+          <img src="imagens/fachada.webp" alt="Fachada do Recanto Pizzaria em Taquaritinga" width="1400" height="933" loading="lazy">
         </div>
       </div>
     </div>
@@ -582,6 +678,13 @@
         <div class="menu-card reveal reveal-d3"><span class="menu-card-emoji">🧆</span><h3>Porções</h3><p>Perfeitas para compartilhar enquanto aprecia um bom chopp</p><span class="menu-card-badge">Para compartilhar</span></div>
         <div class="menu-card reveal reveal-d4"><span class="menu-card-emoji">🍹</span><h3>Drinks & Coquetéis</h3><p>Coquetéis artesanais para uma noite memorável</p><span class="menu-card-badge">Mixologia especial</span></div>
         <div class="menu-card reveal reveal-d5"><span class="menu-card-emoji">🍺</span><h3>Chopp & Bebidas</h3><p>Chopp artesanal gelado e carta de bebidas completa</p><span class="menu-card-badge">Sempre gelado</span></div>
+      </div>
+      <div class="menu-cta reveal">
+        <div>
+          <h3>Quer ver o cardápio completo?</h3>
+          <p>Chame no WhatsApp e receba sabores, preços e promoções do dia.</p>
+        </div>
+        <a href="https://wa.me/551632522813?text=Ol%C3%A1!%20Pode%20me%20enviar%20o%20card%C3%A1pio%20completo%3F" class="btn btn-primary" target="_blank" rel="noopener">Pedir cardápio</a>
       </div>
     </div>
   </section>
@@ -614,7 +717,7 @@
       <div style="text-align:center" class="reveal reveal-d1">
         <div class="test-badge">
           <div class="test-badge-score">4,5</div>
-          <div><div class="test-badge-stars">★★★★★</div><div class="test-badge-count">273+ avaliações no Google</div></div>
+          <div><div class="test-badge-stars" aria-label="4,5 de 5 estrelas">★★★★½</div><div class="test-badge-count">273+ avaliações no Google</div></div>
         </div>
       </div>
       <div class="test-grid">
@@ -641,20 +744,21 @@
         <h2 class="sec-title">Conheça o <em>Recanto</em></h2>
       </div>
       <div class="gallery-grid">
-        <div class="gallery-item reveal" onclick="openLightbox(this)">
-          <img src="imagens/fachada.jpg" alt="Fachada do Recanto Pizzaria" loading="lazy">
-        </div>
-        <div class="gallery-item reveal reveal-d1"><div class="gallery-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Em breve</span></div></div>
-        <div class="gallery-item reveal reveal-d2"><div class="gallery-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Em breve</span></div></div>
-        <div class="gallery-item reveal reveal-d3"><div class="gallery-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Em breve</span></div></div>
-        <div class="gallery-item reveal reveal-d4"><div class="gallery-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Em breve</span></div></div>
+        <figure class="gallery-item reveal" tabindex="0"><img src="imagens/fachada.webp" alt="Fachada do Recanto Pizzaria" loading="lazy"><figcaption>Nossa casa</figcaption></figure>
+        <figure class="gallery-item reveal reveal-d1" tabindex="0"><img src="imagens/galeria-pizza.webp" alt="Pizza de calabresa com manjericão" loading="lazy"><figcaption>Pizza bem recheada</figcaption></figure>
+        <figure class="gallery-item reveal reveal-d2" tabindex="0"><img src="imagens/galeria-chopp.webp" alt="Duas canecas de chopp gelado" loading="lazy"><figcaption>Chopp gelado</figcaption></figure>
+        <figure class="gallery-item reveal reveal-d3" tabindex="0"><img src="imagens/galeria-porcoes.webp" alt="Porção de iscas empanadas com molho" loading="lazy"><figcaption>Porções caprichadas</figcaption></figure>
+        <figure class="gallery-item reveal reveal-d4" tabindex="0"><img src="imagens/galeria-tabua.webp" alt="Tábua de frios com queijos e salame" loading="lazy"><figcaption>Tábua de frios</figcaption></figure>
       </div>
     </div>
   </section>
 
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada">
+    <button class="lightbox-close" id="lbClose" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button class="lightbox-nav lightbox-prev" id="lbPrev" aria-label="Foto anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
     <img id="lightboxImg" src="" alt="">
+    <button class="lightbox-nav lightbox-next" id="lbNext" aria-label="Próxima foto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
   </div>
 
   <section class="contact" id="contato">
@@ -664,13 +768,13 @@
           <span class="sec-tag">Contato</span>
           <h2 class="sec-title">Venha nos <em>visitar</em></h2>
           <div class="hours-strip">
-            <div class="hours-day closed"><div class="hours-day-name">Seg</div><div class="hours-day-time">Fechado</div></div>
-            <div class="hours-day"><div class="hours-day-name">Ter</div><div class="hours-day-time">18h–23h</div></div>
-            <div class="hours-day"><div class="hours-day-name">Qua</div><div class="hours-day-time">18h–23h</div></div>
-            <div class="hours-day"><div class="hours-day-name">Qui</div><div class="hours-day-time">18h–23h</div></div>
-            <div class="hours-day"><div class="hours-day-name">Sex</div><div class="hours-day-time">18h–23h</div></div>
-            <div class="hours-day"><div class="hours-day-name">Sáb</div><div class="hours-day-time">18h–23h</div></div>
-            <div class="hours-day"><div class="hours-day-name">Dom</div><div class="hours-day-time">18h–23h</div></div>
+            <div class="hours-day closed" data-day="1"><div class="hours-day-name">Seg</div><div class="hours-day-time">Fechado</div></div>
+            <div class="hours-day" data-day="2"><div class="hours-day-name">Ter</div><div class="hours-day-time">18h–23h</div></div>
+            <div class="hours-day" data-day="3"><div class="hours-day-name">Qua</div><div class="hours-day-time">18h–23h</div></div>
+            <div class="hours-day" data-day="4"><div class="hours-day-name">Qui</div><div class="hours-day-time">18h–23h</div></div>
+            <div class="hours-day" data-day="5"><div class="hours-day-name">Sex</div><div class="hours-day-time">18h–23h</div></div>
+            <div class="hours-day" data-day="6"><div class="hours-day-name">Sáb</div><div class="hours-day-time">18h–23h</div></div>
+            <div class="hours-day" data-day="0"><div class="hours-day-name">Dom</div><div class="hours-day-time">18h–23h</div></div>
           </div>
           <div class="contact-label">Endereço</div>
           <div class="contact-val">Av. Paulo Roberto Scandar, 1016<br>Taquaritinga, SP</div>
@@ -681,7 +785,7 @@
               <svg viewBox="0 0 24 24" fill="#25D366" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.612.638l4.603-1.148A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
               Falar pelo WhatsApp
             </a>
-            <a href="https://www.google.com/maps/place/Recanto+Pizzaria+e+Choperia/" class="contact-btn" target="_blank" rel="noopener">
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Recanto+Pizzaria+e+Choperia%2C+Av.+Paulo+Roberto+Scandar%2C+1016%2C+Taquaritinga+SP" class="contact-btn" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Abrir no Google Maps
             </a>
@@ -706,7 +810,7 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
-        <div><img src="imagens/logo-recanto.png" alt="Recanto" class="footer-logo"></div>
+        <div><img src="imagens/logo-recanto.webp" alt="Recanto" class="footer-logo" width="80" height="80" loading="lazy"></div>
         <div class="footer-links">
           <a href="#sobre">Sobre</a>
           <a href="#cardapio">Cardápio</a>
@@ -715,10 +819,12 @@
           <a href="tel:+551632522813">(16) 3252-2813</a>
         </div>
       </div>
-      <div class="footer-copy">&copy; 2025 Recanto Pizzaria e Choperia &middot; Taquaritinga, SP</div>
+      <div class="footer-copy">&copy; <span id="year">2026</span> Recanto Pizzaria e Choperia &middot; Taquaritinga, SP</div>
       <p class="footer-dev"><a href="https://julianoanselmo.github.io/portifolio/" target="_blank" rel="noopener">Desenvolvido por Juliano Anselmo</a></p>
     </div>
   </footer>
+
+  <a href="#hero" class="to-top" id="toTop" aria-label="Voltar ao topo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg></a>
 
   <a href="https://wa.me/551632522813?text=Ol%C3%A1!%20Gostaria%20de%20fazer%20um%20pedido%20no%20Recanto%20Pizzaria." class="wpp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
     <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.612.638l4.603-1.148A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.82c-2.216 0-4.262-.68-5.963-1.84l-.344-.233-3.278.818.893-3.197-.258-.378A9.787 9.787 0 012.18 12c0-5.422 4.398-9.82 9.82-9.82 5.422 0 9.82 4.398 9.82 9.82 0 5.422-4.398 9.82-9.82 9.82z"/></svg>
@@ -728,26 +834,54 @@
     // Preloader
     (function(){var p=document.getElementById('preloader');var t=setTimeout(function(){p.classList.add('hidden')},3000);window.addEventListener('load',function(){clearTimeout(t);setTimeout(function(){p.classList.add('hidden')},500)})})();
 
-    // Header scroll
+    // Header scroll + voltar ao topo
     var header=document.getElementById('header');
-    window.addEventListener('scroll',function(){header.classList.toggle('scrolled',window.pageYOffset>60)},{passive:true});
+    var toTop=document.getElementById('toTop');
+    function onScroll(){var y=window.pageYOffset;header.classList.toggle('scrolled',y>60);toTop.classList.toggle('show',y>700)}
+    window.addEventListener('scroll',onScroll,{passive:true});onScroll();
 
     // Mobile menu
     var toggle=document.getElementById('mobileToggle');
     var navMobile=document.getElementById('navMobile');
-    toggle.addEventListener('click',function(){toggle.classList.toggle('active');navMobile.classList.toggle('open');document.body.style.overflow=navMobile.classList.contains('open')?'hidden':''});
-    navMobile.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){toggle.classList.remove('active');navMobile.classList.remove('open');document.body.style.overflow=''})});
+    function setMenu(open){toggle.classList.toggle('active',open);navMobile.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);document.body.style.overflow=open?'hidden':'';toggle.setAttribute('aria-expanded',open);toggle.setAttribute('aria-label',open?'Fechar menu':'Abrir menu')}
+    toggle.addEventListener('click',function(){setMenu(!navMobile.classList.contains('open'))});
+    navMobile.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){setMenu(false)})});
+
+    // Link ativo conforme a seção visível
+    (function(){var links=document.querySelectorAll('#nav a[data-section]');var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){links.forEach(function(l){l.classList.toggle('active',l.dataset.section===e.target.id)})}})},{rootMargin:'-45% 0px -50% 0px'});links.forEach(function(l){var s=document.getElementById(l.dataset.section);if(s)obs.observe(s)})})();
+
+    // Aberto agora (horário de Brasília): ter a dom, 18h às 23h
+    (function(){
+      var parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Sao_Paulo',weekday:'short',hour:'numeric',hour12:false}).formatToParts(new Date());
+      var wd=parts.find(function(p){return p.type==='weekday'}).value;var h=parseInt(parts.find(function(p){return p.type==='hour'}).value,10)%24;
+      var day=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(wd);
+      var today=document.querySelector('.hours-day[data-day="'+day+'"]');if(today)today.classList.add('today');
+      var el=document.getElementById('heroStatus'),txt=document.getElementById('heroStatusText');
+      if(day!==1&&h>=18&&h<23){el.classList.add('open');txt.textContent='Aberto agora · até 23h'}
+      else{el.classList.add('closed');txt.textContent=day===1?'Fechado hoje · abrimos amanhã às 18h':(h<18?'Fechado · abre hoje às 18h':(day===0?'Fechado · abre terça às 18h':'Fechado · abre amanhã às 18h'))}
+    })();
+    document.getElementById('year').textContent=new Date().getFullYear();
 
     // Scroll reveal
     (function(){var els=document.querySelectorAll('.reveal');var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:0.1,rootMargin:'0px 0px -30px 0px'});els.forEach(function(el){obs.observe(el)})})();
 
     // Lightbox
-    function openLightbox(item){var img=item.querySelector('img');if(!img)return;var lb=document.getElementById('lightbox');document.getElementById('lightboxImg').src=img.src;lb.classList.add('active');document.body.style.overflow='hidden'}
-    function closeLightbox(){document.getElementById('lightbox').classList.remove('active');document.body.style.overflow=''}
-    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox()});
+    (function(){
+      var items=[].slice.call(document.querySelectorAll('.gallery-item'));var lb=document.getElementById('lightbox');var lbImg=document.getElementById('lightboxImg');var lbCap=document.getElementById('lightboxCaption');var cur=0,last=null;
+      function show(i){cur=(i+items.length)%items.length;var img=items[cur].querySelector('img');lbImg.src=img.src;lbImg.alt=img.alt;lbCap.textContent=items[cur].querySelector('figcaption').textContent+' · '+(cur+1)+'/'+items.length}
+      function open(i){last=document.activeElement;show(i);lb.classList.add('active');document.body.style.overflow='hidden';document.getElementById('lbClose').focus()}
+      function close(){if(!lb.classList.contains('active'))return;lb.classList.remove('active');document.body.style.overflow='';if(last)last.focus()}
+      items.forEach(function(it,i){it.addEventListener('click',function(){open(i)});it.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open(i)}})});
+      lb.addEventListener('click',function(e){if(e.target===lb)close()});
+      document.getElementById('lbClose').addEventListener('click',close);
+      document.getElementById('lbPrev').addEventListener('click',function(){show(cur-1)});
+      document.getElementById('lbNext').addEventListener('click',function(){show(cur+1)});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'){close();if(navMobile.classList.contains('open'))setMenu(false)}if(!lb.classList.contains('active'))return;if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1)});
+      var sx=0;lb.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});lb.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)show(cur+(dx<0?1:-1))});
+    })();
 
     // Lazy map
-    (function(){var mc=document.getElementById('contactMap');if(!mc)return;var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var f=document.createElement('iframe');f.src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3718.5!2d-48.505!3d-21.4058!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b8f0e4e4e4e4e5%3A0x1234567890abcdef!2sAv.+Paulo+Roberto+Scandar%2C+1016+-+Taquaritinga%2C+SP!5e0!3m2!1spt-BR!2sbr';f.allowFullscreen=true;f.loading='lazy';f.title='Localização do Recanto';f.style.cssText='width:100%;height:100%;border:0';mc.innerHTML='';mc.appendChild(f);obs.unobserve(e.target)}})},{rootMargin:'200px'});obs.observe(mc)})();
+    (function(){var mc=document.getElementById('contactMap');if(!mc)return;var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var f=document.createElement('iframe');f.src='https://maps.google.com/maps?q=Av.+Paulo+Roberto+Scandar,+1016,+Taquaritinga+-+SP&z=16&hl=pt-BR&output=embed';f.allowFullscreen=true;f.loading='lazy';f.title='Localização do Recanto';f.style.cssText='width:100%;height:100%;border:0';mc.innerHTML='';mc.appendChild(f);obs.unobserve(e.target)}})},{rootMargin:'200px'});obs.observe(mc)})();
   </script>
 </body>
 </html>
